@@ -324,6 +324,8 @@ def generate_launch_description():
                     namespace=LaunchConfiguration("camera_name"),
                     parameters=params,
                     output="log",
+                    respawn=LaunchConfiguration("respawn"),
+                    respawn_delay=1.0,
                 )
             ]
         else:
@@ -344,12 +346,19 @@ def generate_launch_description():
                             ),
                         ],
                         output="log",
+                        respawn=LaunchConfiguration("respawn"),
+                        respawn_delay=1.0,
                     )
                 ])
             ]
 
+    # `respawn` is declared outside the `args` list on purpose so it is NOT
+    # forwarded to the driver as a ROS parameter (load_parameters only iterates
+    # over `args`). It only controls process auto-restart on crash, matching the
+    # ROS1 launch's `respawn` behavior.
     return LaunchDescription(
-        args + [
+        [DeclareLaunchArgument('respawn', default_value='false')]
+        + args + [
             OpaqueFunction(function=lambda context: create_node_action(context, args))
         ]
     )
