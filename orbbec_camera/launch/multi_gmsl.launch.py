@@ -2,11 +2,11 @@
 # multi_gmsl.launch.py
 #
 # Gemini 335Lg (GMSL) × 5대
-#   RGBD_FRONT_SERIAL         →  rgbd_front         (Primary   — 마스터 클럭)
-#   RGBD_FRONT_BOTTOM_SERIAL  →  rgbd_front_bottom  (Secondary — 슬레이브)
-#   RGBD_RIGHT_SERIAL         →  rgbd_right         (Secondary — 슬레이브)
-#   RGBD_LEFT_SERIAL          →  rgbd_left          (Secondary — 슬레이브)
-#   RGBD_BACK_SERIAL          →  rgbd_back          (Secondary — 슬레이브)
+#   FRONT_RGBD_SERIAL  →  frontRGBD  (Primary   — 마스터 클럭)
+#   FDOWN_RGBD_SERIAL  →  fdownRGBD  (Secondary — 슬레이브)
+#   RIGHT_RGBD_SERIAL  →  rightRGBD  (Secondary — 슬레이브)
+#   LEFT_RGBD_SERIAL   →  leftRGBD   (Secondary — 슬레이브)
+#   BACK_RGBD_SERIAL   →  backRGBD   (Secondary — 슬레이브)
 #
 # 시리얼 번호는 환경변수에서 읽어오며, 환경변수가 없으면 아래 기본값을 사용한다.
 # 카메라 이름(=ROS 네임스페이스/토픽 접두어)과 환경변수 이름을 통일한다.
@@ -34,11 +34,11 @@ from launch_ros.actions import Node
 #   camera_name : ROS 네임스페이스 / 토픽 접두어
 #   env_var     : 시리얼 번호를 읽어올 환경변수 이름
 CAMERAS = [
-    ('rgbd_front',        'RGBD_FRONT_SERIAL',        'CPB33630009R', 'primary'),
-    ('rgbd_front_bottom', 'RGBD_FRONT_BOTTOM_SERIAL', 'CPB33630000S', 'secondary'),
-    ('rgbd_right',        'RGBD_RIGHT_SERIAL',        'CPB9463000AV', 'secondary'),
-    ('rgbd_left',         'RGBD_LEFT_SERIAL',         'CPB9463000YD', 'secondary'),
-    ('rgbd_back',         'RGBD_BACK_SERIAL',         'CPB9463000FX', 'secondary'),
+    ('frontRGBD', 'FRONT_RGBD_SERIAL', 'CPB33630009R', 'primary'),
+    ('fdownRGBD', 'FDOWN_RGBD_SERIAL', 'CPB33630000S', 'secondary'),
+    ('rightRGBD', 'RIGHT_RGBD_SERIAL', 'CPB9463000AV', 'secondary'),
+    ('leftRGBD',  'LEFT_RGBD_SERIAL',  'CPB9463000YD', 'secondary'),
+    ('backRGBD',  'BACK_RGBD_SERIAL',  'CPB9463000FX', 'secondary'),
 ]
 
 DELAY_CAM2 = 5.0
@@ -140,7 +140,7 @@ def generate_launch_description():
         LogInfo(msg=f'Primary 즉시 → Secondary {delay_msg} 순차 기동'),
         LogInfo(msg='sync_mode: primary / secondary x4'),
         LogInfo(msg='noise_removal: 전체 hardware (ASIC)'),
-        LogInfo(msg='cameras: rgbd_front / rgbd_front_bottom / rgbd_right / '
-                    'rgbd_left / rgbd_back'),
+        LogInfo(msg='cameras: frontRGBD / fdownRGBD / rightRGBD / '
+                    'leftRGBD / backRGBD'),
         *cameras,
     ])
