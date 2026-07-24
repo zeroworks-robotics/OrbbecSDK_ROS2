@@ -64,7 +64,12 @@ if(USE_RK_HW_DECODER)
     endif()
 endif()
 
-execute_process(COMMAND uname -m OUTPUT_VARIABLE MACHINES)
+# 크로스 컴파일 시 uname -m 은 호스트(x86_64)를 반환하므로 타겟 arch(CMAKE_SYSTEM_PROCESSOR)를 쓴다.
+if(CMAKE_CROSSCOMPILING)
+    set(MACHINES ${CMAKE_SYSTEM_PROCESSOR})
+else()
+    execute_process(COMMAND uname -m OUTPUT_VARIABLE MACHINES)
+endif()
 execute_process(COMMAND getconf LONG_BIT OUTPUT_VARIABLE MACHINES_BIT)
 message(STATUS "ORRBEC Machine : ${MACHINES}")
 message(STATUS "ORRBEC Machine Bits : ${MACHINES_BIT}")
